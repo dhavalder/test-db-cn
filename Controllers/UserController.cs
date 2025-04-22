@@ -17,13 +17,12 @@ namespace test_db_cn.Controllers
         [HttpGet("GetUsers", Name = "GetUsers")]
         public async Task<IActionResult> GetUsers(int pageNumber = 1, int pageSize = 20)
         {
-            var totalUsers = await _contex.Users.CountAsync();
+            var totalUsers = await _contex.Users.LongCountAsync();
 
-            var users = await _contex.Users
+            var users = _contex.Users.OfType<Users>()
                 .OrderBy(u => u.Id)
                 .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+                .Take(pageSize);
 
             var responce = new
             {
